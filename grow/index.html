@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>凄ノ王伝説 (PCE) 攻略&#x2F;解析 - 味方キャラの成長</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/SusanoohResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/SusanoohResource/">凄ノ王伝説 (PCE) 攻略&#x2F;解析</a>
+</header>
+
+<p>
+Published on: 2022-12-10
+
+<br>Updated on: 2022-12-22
+
+</p>
+
+<h1>味方キャラの成長</h1>
+
+<p>味方キャラの能力はキャラIDおよび内部LVに依存する。</p>
+<p>味方キャラの内部LVは以下のように決まる:</p>
+<ul>
+<li>朱紗の場合、経験値に応じた内部LVとなる。ただしストーリー進行段階ごとに定められた内部LV上限を超えない。</li>
+<li>朱紗以外の場合、ストーリー進行段階に応じた内部LVとなる(経験値によらない)。</li>
+</ul>
+<p>味方キャラの STR, DEX, VIT, MDX は内部LVごとに基準値が定められており、この値を「能力値ランク」で補正したものが最終的な値となる。<br />
+能力値ランクには A, B, C, D の 4 種類があり、それぞれ基準値を以下のように補正する:</p>
+<table><thead><tr><th style="text-align: center">ランク</th><th>補正式</th></tr></thead><tbody>
+<tr><td style="text-align: center">A</td><td><code>(基準値) * 2</code></td></tr>
+<tr><td style="text-align: center">B</td><td><code>(基準値) + (基準値) / 2</code></td></tr>
+<tr><td style="text-align: center">C</td><td><code>(基準値)</code></td></tr>
+<tr><td style="text-align: center">D</td><td><code>(基準値) / 2</code></td></tr>
+</tbody></table>
+<p>能力値ランクはキャラIDおよび内部LVにより決まる。</p>
+<p>味方キャラの習得ESPはキャラIDおよび内部LVにより決まる。</p>
+<h2 id="kiyarabie-cheng-chang-teburu">キャラ別成長テーブル</h2>
+<ul>
+<li><a href="https://taotao54321.github.io/SusanoohResource/grow-susa/">朱紗</a></li>
+<li><a href="https://taotao54321.github.io/SusanoohResource/grow-ally/">朱紗以外</a></li>
+</ul>
+<h2 id="nei-bu-lvbie-ji-zhun-neng-li-zhi">内部LV別基準能力値</h2>
+<p>内部LVが 49 を超える場合は 49 として扱う。</p>
+<table><thead><tr><th style="text-align: right">内部LV</th><th style="text-align: right">STR</th><th style="text-align: right">DEX</th><th style="text-align: right">VIT</th><th style="text-align: right">MDX</th></tr></thead><tbody>
+<tr><td style="text-align: right">0</td><td style="text-align: right">12</td><td style="text-align: right">9</td><td style="text-align: right">8</td><td style="text-align: right">7</td></tr>
+<tr><td style="text-align: right">1</td><td style="text-align: right">12</td><td style="text-align: right">12</td><td style="text-align: right">8</td><td style="text-align: right">10</td></tr>
+<tr><td style="text-align: right">2</td><td style="text-align: right">12</td><td style="text-align: right">15</td><td style="text-align: right">8</td><td style="text-align: right">13</td></tr>
+<tr><td style="text-align: right">3</td><td style="text-align: right">12</td><td style="text-align: right">18</td><td style="text-align: right">9</td><td style="text-align: right">15</td></tr>
+<tr><td style="text-align: right">4</td><td style="text-align: right">13</td><td style="text-align: right">21</td><td style="text-align: right">9</td><td style="text-align: right">18</td></tr>
+<tr><td style="text-align: right">5</td><td style="text-align: right">13</td><td style="text-align: right">24</td><td style="text-align: right">10</td><td style="text-align: right">20</td></tr>
+<tr><td style="text-align: right">6</td><td style="text-align: right">13</td><td style="text-align: right">26</td><td style="text-align: right">11</td><td style="text-align: right">21</td></tr>
+<tr><td style="text-align: right">7</td><td style="text-align: right">14</td><td style="text-align: right">29</td><td style="text-align: right">11</td><td style="text-align: right">22</td></tr>
+<tr><td style="text-align: right">8</td><td style="text-align: right">14</td><td style="text-align: right">32</td><td style="text-align: right">12</td><td style="text-align: right">23</td></tr>
+<tr><td style="text-align: right">9</td><td style="text-align: right">15</td><td style="text-align: right">35</td><td style="text-align: right">13</td><td style="text-align: right">23</td></tr>
+<tr><td style="text-align: right">10</td><td style="text-align: right">16</td><td style="text-align: right">38</td><td style="text-align: right">14</td><td style="text-align: right">26</td></tr>
+<tr><td style="text-align: right">11</td><td style="text-align: right">16</td><td style="text-align: right">40</td><td style="text-align: right">15</td><td style="text-align: right">29</td></tr>
+<tr><td style="text-align: right">12</td><td style="text-align: right">17</td><td style="text-align: right">43</td><td style="text-align: right">16</td><td style="text-align: right">32</td></tr>
+<tr><td style="text-align: right">13</td><td style="text-align: right">18</td><td style="text-align: right">46</td><td style="text-align: right">18</td><td style="text-align: right">34</td></tr>
+<tr><td style="text-align: right">14</td><td style="text-align: right">19</td><td style="text-align: right">48</td><td style="text-align: right">19</td><td style="text-align: right">37</td></tr>
+<tr><td style="text-align: right">15</td><td style="text-align: right">20</td><td style="text-align: right">51</td><td style="text-align: right">20</td><td style="text-align: right">39</td></tr>
+<tr><td style="text-align: right">16</td><td style="text-align: right">21</td><td style="text-align: right">54</td><td style="text-align: right">22</td><td style="text-align: right">40</td></tr>
+<tr><td style="text-align: right">17</td><td style="text-align: right">23</td><td style="text-align: right">56</td><td style="text-align: right">23</td><td style="text-align: right">41</td></tr>
+<tr><td style="text-align: right">18</td><td style="text-align: right">24</td><td style="text-align: right">59</td><td style="text-align: right">25</td><td style="text-align: right">42</td></tr>
+<tr><td style="text-align: right">19</td><td style="text-align: right">25</td><td style="text-align: right">61</td><td style="text-align: right">26</td><td style="text-align: right">42</td></tr>
+<tr><td style="text-align: right">20</td><td style="text-align: right">27</td><td style="text-align: right">63</td><td style="text-align: right">28</td><td style="text-align: right">45</td></tr>
+<tr><td style="text-align: right">21</td><td style="text-align: right">28</td><td style="text-align: right">66</td><td style="text-align: right">30</td><td style="text-align: right">48</td></tr>
+<tr><td style="text-align: right">22</td><td style="text-align: right">30</td><td style="text-align: right">68</td><td style="text-align: right">32</td><td style="text-align: right">51</td></tr>
+<tr><td style="text-align: right">23</td><td style="text-align: right">31</td><td style="text-align: right">70</td><td style="text-align: right">33</td><td style="text-align: right">54</td></tr>
+<tr><td style="text-align: right">24</td><td style="text-align: right">33</td><td style="text-align: right">72</td><td style="text-align: right">35</td><td style="text-align: right">56</td></tr>
+<tr><td style="text-align: right">25</td><td style="text-align: right">35</td><td style="text-align: right">74</td><td style="text-align: right">37</td><td style="text-align: right">58</td></tr>
+<tr><td style="text-align: right">26</td><td style="text-align: right">37</td><td style="text-align: right">76</td><td style="text-align: right">39</td><td style="text-align: right">60</td></tr>
+<tr><td style="text-align: right">27</td><td style="text-align: right">39</td><td style="text-align: right">78</td><td style="text-align: right">41</td><td style="text-align: right">61</td></tr>
+<tr><td style="text-align: right">28</td><td style="text-align: right">41</td><td style="text-align: right">80</td><td style="text-align: right">44</td><td style="text-align: right">61</td></tr>
+<tr><td style="text-align: right">29</td><td style="text-align: right">43</td><td style="text-align: right">82</td><td style="text-align: right">46</td><td style="text-align: right">62</td></tr>
+<tr><td style="text-align: right">30</td><td style="text-align: right">45</td><td style="text-align: right">84</td><td style="text-align: right">48</td><td style="text-align: right">65</td></tr>
+<tr><td style="text-align: right">31</td><td style="text-align: right">47</td><td style="text-align: right">85</td><td style="text-align: right">50</td><td style="text-align: right">68</td></tr>
+<tr><td style="text-align: right">32</td><td style="text-align: right">50</td><td style="text-align: right">87</td><td style="text-align: right">53</td><td style="text-align: right">70</td></tr>
+<tr><td style="text-align: right">33</td><td style="text-align: right">52</td><td style="text-align: right">88</td><td style="text-align: right">55</td><td style="text-align: right">73</td></tr>
+<tr><td style="text-align: right">34</td><td style="text-align: right">54</td><td style="text-align: right">90</td><td style="text-align: right">57</td><td style="text-align: right">75</td></tr>
+<tr><td style="text-align: right">35</td><td style="text-align: right">57</td><td style="text-align: right">91</td><td style="text-align: right">60</td><td style="text-align: right">77</td></tr>
+<tr><td style="text-align: right">36</td><td style="text-align: right">60</td><td style="text-align: right">92</td><td style="text-align: right">62</td><td style="text-align: right">79</td></tr>
+<tr><td style="text-align: right">37</td><td style="text-align: right">62</td><td style="text-align: right">93</td><td style="text-align: right">65</td><td style="text-align: right">80</td></tr>
+<tr><td style="text-align: right">38</td><td style="text-align: right">65</td><td style="text-align: right">94</td><td style="text-align: right">68</td><td style="text-align: right">81</td></tr>
+<tr><td style="text-align: right">39</td><td style="text-align: right">68</td><td style="text-align: right">95</td><td style="text-align: right">70</td><td style="text-align: right">81</td></tr>
+<tr><td style="text-align: right">40</td><td style="text-align: right">71</td><td style="text-align: right">96</td><td style="text-align: right">73</td><td style="text-align: right">84</td></tr>
+<tr><td style="text-align: right">41</td><td style="text-align: right">74</td><td style="text-align: right">97</td><td style="text-align: right">76</td><td style="text-align: right">87</td></tr>
+<tr><td style="text-align: right">42</td><td style="text-align: right">77</td><td style="text-align: right">98</td><td style="text-align: right">79</td><td style="text-align: right">90</td></tr>
+<tr><td style="text-align: right">43</td><td style="text-align: right">80</td><td style="text-align: right">98</td><td style="text-align: right">82</td><td style="text-align: right">92</td></tr>
+<tr><td style="text-align: right">44</td><td style="text-align: right">83</td><td style="text-align: right">99</td><td style="text-align: right">85</td><td style="text-align: right">94</td></tr>
+<tr><td style="text-align: right">45</td><td style="text-align: right">86</td><td style="text-align: right">99</td><td style="text-align: right">88</td><td style="text-align: right">96</td></tr>
+<tr><td style="text-align: right">46</td><td style="text-align: right">90</td><td style="text-align: right">100</td><td style="text-align: right">91</td><td style="text-align: right">98</td></tr>
+<tr><td style="text-align: right">47</td><td style="text-align: right">93</td><td style="text-align: right">100</td><td style="text-align: right">94</td><td style="text-align: right">99</td></tr>
+<tr><td style="text-align: right">48</td><td style="text-align: right">96</td><td style="text-align: right">100</td><td style="text-align: right">97</td><td style="text-align: right">100</td></tr>
+<tr><td style="text-align: right">49</td><td style="text-align: right">100</td><td style="text-align: right">100</td><td style="text-align: right">100</td><td style="text-align: right">100</td></tr>
+</tbody></table>
+
+
+
+</body>
+</html>

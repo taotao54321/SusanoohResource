@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>凄ノ王伝説 (PCE) 攻略&#x2F;解析 - 乱数</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/SusanoohResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/SusanoohResource/">凄ノ王伝説 (PCE) 攻略&#x2F;解析</a>
+</header>
+
+<p>
+Published on: 2022-12-23
+
+</p>
+
+<h1>乱数</h1>
+
+<p>乱数生成器は 16bit の内部状態を持ち、8bit の乱数を生成する。実装はシフトレジスタとフレームカウンタの組み合わせとなっている。<br />
+内部状態の下位 8bit はフレームカウンタでもあり、毎フレームインクリメントされる(オーバーフローしても上位 8bit には繰り上がらない)。</p>
+<p>乱数生成時の内部状態更新処理を Rust で書くと以下のようになる:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">rng_update</span><span>(</span><span style="color:#bf616a;">state</span><span>: </span><span style="color:#b48ead;">u16</span><span>) -&gt; </span><span style="color:#b48ead;">u16 </span><span>{
+</span><span>    </span><span style="color:#b48ead;">let</span><span> carry = ((state &gt;&gt; </span><span style="color:#d08770;">14</span><span>) ^ state) &amp; </span><span style="color:#d08770;">1</span><span>;
+</span><span>
+</span><span>    ((state ^ (state &lt;&lt; </span><span style="color:#d08770;">8</span><span>)) &lt;&lt; </span><span style="color:#d08770;">1</span><span>) | carry
+</span><span>}
+</span></code></pre>
+<p>そして、生成される乱数は更新後の内部状態の上位 8bit と下位 8bit の XOR となる。<br />
+内部状態の更新式にも同様の XOR があることから、乱数の bit1-7 は更新前の内部状態の bit8-14 がそのまま使われることに注意。<br />
+更新前の内部状態から次に生成される乱数を求める式を Rust で書くと以下のようになる:</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">next_rand</span><span>(</span><span style="color:#bf616a;">state</span><span>: </span><span style="color:#b48ead;">u16</span><span>) -&gt; </span><span style="color:#b48ead;">u8 </span><span>{
+</span><span>    </span><span style="color:#b48ead;">let</span><span> carry = ((state &gt;&gt; </span><span style="color:#d08770;">14</span><span>) ^ state) &amp; </span><span style="color:#d08770;">1</span><span>;
+</span><span>
+</span><span>    ((</span><span style="color:#bf616a;">self</span><span>.</span><span style="color:#d08770;">0 </span><span>&gt;&gt; </span><span style="color:#d08770;">7</span><span>) ^ carry) as </span><span style="color:#b48ead;">u8
+</span><span>}
+</span></code></pre>
+<p>このことから、乱数調整において単にフレーム待ちを行うだけでは乱数の下位 1bit しか変わらないので不十分なことが多く、大抵はいくつか前の乱数に遡っての調整を要する。<br />
+また、同一フレームで乱数が 2 回生成される場合、内部状態更新式の XOR が 2 回行われるため、内部状態の bit10-15 はフレームカウンタの値によらず一定になる。通常攻撃で敵を倒せなかった場合などはこのケースに該当する。<br />
+これらの事情から、本作における乱数調整は難易度が高く、TASでもフレームロスを抑えながら調整するのは難しい場面がある。</p>
+<p><code>rand()</code> は生成された乱数そのものである。<br />
+<code>rand(0..=n)</code> は基本的には <code>(n+1) * rand() / 256</code> で生成される(<code>n</code> が定数の場合、ビットマスクなどを用いることもある)。</p>
+
+
+
+</body>
+</html>

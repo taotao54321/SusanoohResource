@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>凄ノ王伝説 (PCE) 攻略&#x2F;解析 - 戦闘 - ダメージ計算</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/SusanoohResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/SusanoohResource/">凄ノ王伝説 (PCE) 攻略&#x2F;解析</a>
+</header>
+
+<p>
+Published on: 2022-12-23
+
+</p>
+
+<h1>戦闘 - ダメージ計算</h1>
+
+<p>ダメージ攻撃には以下の 4 種類がある:</p>
+<ul>
+<li>近接攻撃</li>
+<li>遠隔攻撃</li>
+<li>手投げ弾</li>
+<li>ESP</li>
+</ul>
+<p>ダメージ計算式は基本的に全種類共通だが、種類ごとに「攻撃力」「防御力」「ダメージランク」の計算式が異なる。これらを「ダメージパラメータ」と総称する。</p>
+<p>ダメージランクには以下の 5 種類がある:</p>
+<ul>
+<li>A (クリティカル)</li>
+<li>B (通常ヒット)</li>
+<li>C (小回避)</li>
+<li>D (大回避)</li>
+<li>E (カスダメ)</li>
+</ul>
+<p>ほとんどの場合、ダメージには攻撃側の内部LVによる乱数補正がかかる。これを「LVダメージボーナス」と呼ぶ。<br />
+LVダメージボーナスのテーブルは以下の通り:</p>
+<table><thead><tr><th>内部LV</th><th>ボーナス</th></tr></thead><tbody>
+<tr><td><code>0..=9</code></td><td><code>0..=1</code></td></tr>
+<tr><td><code>10..=19</code></td><td><code>2..=4</code></td></tr>
+<tr><td><code>20..=29</code></td><td><code>5..=9</code></td></tr>
+<tr><td><code>30..=39</code></td><td><code>8..=14</code></td></tr>
+<tr><td><code>40..=49</code></td><td><code>12..=20</code></td></tr>
+<tr><td><code>50..=59</code></td><td><code>14..=24</code></td></tr>
+</tbody></table>
+<p>まず全種類共通のダメージ計算式を示し、その後種類ごとのダメージパラメータ計算式を示す。</p>
+<p>以下、近接/遠隔攻撃を「通常攻撃」と総称する。<br />
+また、ESP以外の攻撃を「物理攻撃」と総称する。</p>
+<h2 id="dameziji-suan">ダメージ計算</h2>
+<p>まず「ダメージ基礎値」を計算する。<br />
+これはほとんどの場合そのまま最終ダメージとなるが、攻撃側または防御側がヤマタノオロチの場合のみさらに補正がかかる。</p>
+<h3 id="dameziji-chu-zhi">ダメージ基礎値</h3>
+<p>ダメージランクが E の場合、ダメージ基礎値は <code>2 * rand(1..=3) + (LVダメージボーナス最低値) / 2</code> となる。</p>
+<p>それ以外の場合、まずダメージランクにより攻撃力を修正する(最大 255):</p>
+<table><thead><tr><th style="text-align: center">ダメージランク</th><th>修正後攻撃力</th></tr></thead><tbody>
+<tr><td style="text-align: center">A</td><td><code>(攻撃力) * 4 / 3</code></td></tr>
+<tr><td style="text-align: center">B</td><td><code>(攻撃力)</code></td></tr>
+<tr><td style="text-align: center">C</td><td><code>(攻撃力) * 4 / 5</code></td></tr>
+<tr><td style="text-align: center">D</td><td><code>(攻撃力) * 2 / 3</code></td></tr>
+</tbody></table>
+<p>そして、ダメージ基礎値は <code>min(1, (修正後攻撃力) - (防御力)) + (LVダメージボーナス)</code> となる。</p>
+<h3 id="zui-zhong-damezi">最終ダメージ</h3>
+<p>攻撃側も防御側もヤマタノオロチでないなら、ダメージ基礎値がそのまま最終ダメージとなる。</p>
+<p>攻撃側がヤマタノオロチの場合、最終ダメージは</p>
+<ul>
+<li><code>(ダメージ基礎値) &gt;= 45</code> なら <code>37 + (ダメージ基礎値)</code> となる。</li>
+<li>さもなくば <code>37 + 2 * (ダメージ基礎値) + rand(0..=3)</code> となる。</li>
+</ul>
+<p>防御側がヤマタノオロチの場合、最終ダメージは</p>
+<ul>
+<li>クサナギの剣または力の剣による近接攻撃なら <code>2 * (ダメージ基礎値) + rand(0..=3)</code> となる。</li>
+<li>さもなくば <code>rand(1..=3)</code> となる。</li>
+</ul>
+<h2 id="dameziparametanoji-suan">ダメージパラメータの計算</h2>
+<h3 id="tong-chang-gong-ji-li">通常攻撃力</h3>
+<p>通常攻撃力は近接/遠隔、味方/敵でそれぞれ計算式が異なる。</p>
+<p>まず、味方の遠隔攻撃の場合は武器攻撃力がそのまま使われる。</p>
+<p>それ以外の場合、基礎攻撃力 (<code>u16</code>) を求め、それをHP残量に応じて補正したものが攻撃力となる。<br />
+基礎攻撃力の計算式は以下の通り:</p>
+<ul>
+<li>味方の近接攻撃の場合、<code>(STR) + (武器攻撃力)</code></li>
+<li>敵の近接/遠隔攻撃の場合、<code>(STR) + (内部LV)</code></li>
+</ul>
+<p>HP残量による攻撃力補正式は以下の通り (最大 255):</p>
+<table><thead><tr><th>HP残量</th><th>攻撃力</th></tr></thead><tbody>
+<tr><td><code>0..=19</code> %</td><td><code>1 + (基礎攻撃力) * 7 / 10</code></td></tr>
+<tr><td><code>20..=39</code> %</td><td><code>1 + (基礎攻撃力) * 8 / 10</code></td></tr>
+<tr><td><code>40..=59</code> %</td><td><code>1 + (基礎攻撃力) * 9 / 10</code></td></tr>
+<tr><td><code>60..=100</code> %</td><td><code>1 + (基礎攻撃力)</code></td></tr>
+</tbody></table>
+<h3 id="shou-tou-gedan-gong-ji-li">手投げ弾攻撃力</h3>
+<p>手投げ弾攻撃力は防御側が通常敵なら 80, ストーリーボスなら 30 となる。</p>
+<h3 id="espgong-ji-li">ESP攻撃力</h3>
+<p>ESP攻撃力はESPの種類ごとに固定。ただし味方と敵でテーブルが異なる。</p>
+<p>味方のESP攻撃力:</p>
+<table>
+    <thead>
+        <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+    </thead>
+    <tbody>
+        <tr><th>PK</th><td>25</td><td>36</td><td>45</td><td>80</td></tr>
+        <tr><th>ウェーブ</th><td>17</td><td>22</td><td>30</td><td>60</td></tr>
+        <tr><th>フレア</th><td>10</td><td>17</td><td>22</td><td>40</td></tr>
+    </tbody>
+</table>
+<p>敵のESP攻撃力:</p>
+<table>
+    <thead>
+        <tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+    </thead>
+    <tbody>
+        <tr><th>PK</th><td>8</td><td>16</td><td>25</td><td>35</td></tr>
+        <tr><th>ウェーブ</th><td>6</td><td>10</td><td>17</td><td>30</td></tr>
+        <tr><th>フレア</th><td>4</td><td>10</td><td>15</td><td>25</td></tr>
+    </tbody>
+</table>
+<h3 id="wu-li-fang-yu-li">物理防御力</h3>
+<p>物理攻撃に対する防御力の計算式は共通:</p>
+<ul>
+<li>味方の場合 <code>min(255, (VIT) + (防具の防御力))</code> となる。</li>
+<li>敵の場合 <code>min(255, (VIT) + (内部LV))</code> となる。</li>
+</ul>
+<h3 id="espfang-yu-li">ESP防御力</h3>
+<p>ESP防御力は味方、通常敵、ストーリーボスでそれぞれ計算式が異なる。</p>
+<p>味方のESP防御力はバリアレベルに応じた値となる:</p>
+<table><thead><tr><th style="text-align: right">バリアレベル</th><th style="text-align: right">ESP防御力</th></tr></thead><tbody>
+<tr><td style="text-align: right">0</td><td style="text-align: right">0</td></tr>
+<tr><td style="text-align: right">1</td><td style="text-align: right">7</td></tr>
+<tr><td style="text-align: right">2</td><td style="text-align: right">19</td></tr>
+<tr><td style="text-align: right">3</td><td style="text-align: right">30</td></tr>
+<tr><td style="text-align: right">4</td><td style="text-align: right">65</td></tr>
+<tr><td style="text-align: right">5</td><td style="text-align: right">85</td></tr>
+</tbody></table>
+<p>通常敵のESP防御力はバリアレベルに応じた値となる:</p>
+<table><thead><tr><th style="text-align: right">バリアレベル</th><th style="text-align: right">ESP防御力</th></tr></thead><tbody>
+<tr><td style="text-align: right">0</td><td style="text-align: right">0</td></tr>
+<tr><td style="text-align: right">1</td><td style="text-align: right">18</td></tr>
+<tr><td style="text-align: right">2</td><td style="text-align: right">25</td></tr>
+<tr><td style="text-align: right">3</td><td style="text-align: right">48</td></tr>
+</tbody></table>
+<p>ストーリーボスのESP防御力は敵IDごとに設定されている(バリアレベルは影響しない):</p>
+<table><thead><tr><th>敵ID</th><th style="text-align: right">ESP防御力</th></tr></thead><tbody>
+<tr><td>91 (獣魔王 (赤))</td><td style="text-align: right">12</td></tr>
+<tr><td>92 (獣魔王 (青))</td><td style="text-align: right">12</td></tr>
+<tr><td>93 (獣魔王 (黄))</td><td style="text-align: right">12</td></tr>
+<tr><td>94 (邪教の祖)</td><td style="text-align: right">25</td></tr>
+<tr><td>95 (海の凄ノ王)</td><td style="text-align: right">35</td></tr>
+<tr><td>96 (山の凄ノ王)</td><td style="text-align: right">48</td></tr>
+<tr><td>97 (空の凄ノ王)</td><td style="text-align: right">90</td></tr>
+<tr><td>98 (ヤマタノオロチ)</td><td style="text-align: right">60</td></tr>
+</tbody></table>
+<h3 id="damage-rank-normal">通常攻撃ダメージランク</h3>
+<p>通常攻撃のダメージランクは近接/遠隔、味方/敵でそれぞれ計算式が異なる。</p>
+<p>まず「命中率」の分子を求める。計算式は以下の表の通り:</p>
+<table><thead><tr><th>種類</th><th>分子</th></tr></thead><tbody>
+<tr><td>味方の近接攻撃</td><td><code>100 * ((攻撃側のMDX) + (武器の命中補正))</code></td></tr>
+<tr><td>味方の遠隔攻撃</td><td><code>80 * (攻撃側のMDX)</code></td></tr>
+<tr><td>敵の近接/遠隔攻撃</td><td><code>100 * (攻撃側のMDX)</code></td></tr>
+</tbody></table>
+<p>(注: 本来は遠隔武器にも命中補正があると思われるが、誤って近接命中補正を参照しているため補正値が 0 になっている)</p>
+<p>そして <code>min(100, (分子) / (防御側のDEX))</code> を「命中率」とする。</p>
+<p>そして乱数 <code>r = rand(0..=99)</code> を発生し、</p>
+<ul>
+<li><code>r == 0</code> ならばダメージランクを E とする。</li>
+<li><code>r == 1</code> ならばダメージランクを A とする。</li>
+<li><code>r &gt;= (命中率)</code> ならばダメージランクを E とする。</li>
+</ul>
+<p>それ以外、即ち <code>2 &lt;= r &lt; (命中率)</code> の場合、<code>idx = (命中率) / r % 8</code> とし、この値によりダメージランクを決める:</p>
+<table><thead><tr><th><code>idx</code></th><th>ダメージランク</th></tr></thead><tbody>
+<tr><td><code>0..=4</code></td><td>B</td></tr>
+<tr><td><code>5..=6</code></td><td>C</td></tr>
+<tr><td><code>7</code></td><td>D</td></tr>
+</tbody></table>
+<p>よって、近接/遠隔攻撃ともクリティカル率は 1% となる。</p>
+<h3 id="shou-tou-gedan-dameziranku">手投げ弾ダメージランク</h3>
+<p>手投げ弾ダメージランクは乱数のみによって決まる。</p>
+<p>まず <code>rand(0..=99) &lt; 9</code> ならダメージランクは E となる。<br />
+さもなくば <code>rand(1..=4)</code> の結果によりダメージランクを決める:</p>
+<table><thead><tr><th>乱数</th><th>ダメージランク</th></tr></thead><tbody>
+<tr><td>1</td><td>A</td></tr>
+<tr><td>2</td><td>B</td></tr>
+<tr><td>3</td><td>C</td></tr>
+<tr><td>4</td><td>D</td></tr>
+</tbody></table>
+<p>よって、クリティカル率は約 23% となる。</p>
+<h3 id="espdameziranku">ESPダメージランク</h3>
+<p>ESPダメージランクは常に B。</p>
+
+
+
+</body>
+</html>

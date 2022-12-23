@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>凄ノ王伝説 (PCE) 攻略&#x2F;解析 - 戦闘 - 獲得経験値&#x2F;金額</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/SusanoohResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/SusanoohResource/">凄ノ王伝説 (PCE) 攻略&#x2F;解析</a>
+</header>
+
+<p>
+Published on: 2022-12-23
+
+</p>
+
+<h1>戦闘 - 獲得経験値&#x2F;金額</h1>
+
+<h2 id="huo-de-jing-yan-zhi">獲得経験値</h2>
+<p>基本値を <code>(敵の表示LV)</code> とする。</p>
+<p>このとき、敵を倒した際の獲得経験値は以下のようになる (最大 255):</p>
+<ul>
+<li><code>(朱紗のLV) &gt;= (敵のLV)</code> ならば <code>(基本値)</code></li>
+<li><code>(朱紗のLV) &lt;  (敵のLV)</code> ならば <code>(基本値) * (1 + (敵のLV) - (朱紗のLV))</code></li>
+</ul>
+<h2 id="huo-de-jin-e">獲得金額</h2>
+<p>敵を倒した際の獲得金額は <code>min(255, rand(6*(敵の表示LV)..=7*(敵の表示LV)))</code> となる。</p>
+
+
+
+</body>
+</html>

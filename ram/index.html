@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>凄ノ王伝説 (PCE) 攻略&#x2F;解析 - RAM マップ</title>
+
+  <link rel="stylesheet" href="https://taotao54321.github.io/SusanoohResource/main.css">
+</head>
+<body>
+
+
+<header>
+  <a href="https://taotao54321.github.io/SusanoohResource/">凄ノ王伝説 (PCE) 攻略&#x2F;解析</a>
+</header>
+
+<p>
+Published on: 2022-12-24
+
+</p>
+
+<h1>RAM マップ</h1>
+
+<h2 id="gai-yao">概要</h2>
+<table><thead><tr><th>アドレス</th><th>型</th><th>内容</th></tr></thead><tbody>
+<tr><td><code>$2018</code></td><td><code>u8</code></td><td><code>$0000</code> へ書き込んだ値を保持する(VDC 操作中に割り込まれても壊れないようにするため)</td></tr>
+<tr><td><code>$2019</code></td><td><code>u8</code></td><td>VDC 制御レジスタ管理用</td></tr>
+<tr><td><code>$204D</code></td><td><code>ptr</code></td><td>(ビット列処理ルーチン用) ビット列を格納したバッファへのポインタ</td></tr>
+<tr><td><code>$204F</code></td><td><code>u8</code></td><td>(ビット列処理ルーチン用) 現在のビット位置(値は2冪)</td></tr>
+<tr><td><code>$2050</code></td><td><code>u8</code></td><td>(ビット列処理ルーチン用) 初期ビット位置(値は2冪)</td></tr>
+<tr><td><code>$2200</code></td><td><code>u8</code></td><td>常に 0</td></tr>
+<tr><td><code>$2209-$220D</code></td><td><code>u8[5]</code></td><td>1P から 5P までの生<a href="https://taotao54321.github.io/SusanoohResource/ram/#input">入力</a></td></tr>
+<tr><td><code>$220E-$2212</code></td><td><code>u8[5]</code></td><td>1P から 5P までのエッジ<a href="https://taotao54321.github.io/SusanoohResource/ram/#input">入力</a></td></tr>
+<tr><td><code>$2213</code></td><td><code>u8</code></td><td>先行<a href="https://taotao54321.github.io/SusanoohResource/ram/#input">入力</a>バッファ。1Pエッジ入力が OR される</td></tr>
+<tr><td><code>$2216</code></td><td><code>u8</code></td><td>VSYNC 割り込みが有効か (0:false, 1:true)</td></tr>
+<tr><td><code>$2217</code></td><td><code>u8</code></td><td>VSYNC カウンタ</td></tr>
+<tr><td><code>$2218</code></td><td><code>u8</code></td><td>常に 0</td></tr>
+<tr><td><code>$2219</code></td><td><code>u16le</code></td><td><a href="https://taotao54321.github.io/SusanoohResource/rng/">乱数生成器</a>の内部状態</td></tr>
+<tr><td><code>$2261</code></td><td><code>i16le</code></td><td>現在のマップ内座標x</td></tr>
+<tr><td><code>$2263</code></td><td><code>i16le</code></td><td>現在のマップ内座標y</td></tr>
+<tr><td><code>$2265</code></td><td><code>u8</code></td><td>現在のマップID</td></tr>
+<tr><td><code>$2276</code></td><td><code>u8</code></td><td>現在のウィンドウ階層</td></tr>
+<tr><td><code>$2280</code></td><td><code>u16le</code></td><td>所持金</td></tr>
+<tr><td><code>$2282</code></td><td><code>u16le</code></td><td>経験値</td></tr>
+<tr><td><code>$2284</code></td><td><code>u8</code></td><td>食料所持数</td></tr>
+<tr><td><code>$2285</code></td><td><code>u8</code></td><td>手投げ弾所持数</td></tr>
+<tr><td><code>$2286</code></td><td><code>u8</code></td><td>薬所持数</td></tr>
+<tr><td><code>$2287-$229C</code></td><td><code>u8</code></td><td>インベントリ (0xFF 終端)。便宜上、<code>$2284-$229C</code> をインベントリとして扱うこともある</td></tr>
+<tr><td><code>$229D-$229F</code></td><td><code>u8[3]</code></td><td>各PTキャラのキャラID (0xFF で不在)</td></tr>
+<tr><td><code>$22A0-$22A2</code></td><td><code>u8[3]</code></td><td>各PTキャラの装備武器 (値はインベントリ内インデックス。0xFF で無装備)</td></tr>
+<tr><td><code>$22A3-$22A5</code></td><td><code>u8[3]</code></td><td>各PTキャラの装備兜 (値はインベントリ内インデックス。0xFF で無装備)</td></tr>
+<tr><td><code>$22A6-$22A8</code></td><td><code>u8[3]</code></td><td>各PTキャラの装備鎧 (値はインベントリ内インデックス。0xFF で無装備)</td></tr>
+<tr><td><code>$22A9-$22AB</code></td><td><code>u8[3]</code></td><td>各PTキャラの装備盾 (値はインベントリ内インデックス。0xFF で無装備)</td></tr>
+<tr><td><code>$22AC-$22AE</code></td><td><code>u8[3]</code></td><td>各PTキャラのブロックされているESP (bit0:テレポート, bit1:レビ, bit2:ホールド, bit3:キュア, bit4:バリア, bit5:フレア, bit6:ウェーブ, bit7:PK)</td></tr>
+<tr><td><code>$22AF</code></td><td><code>u8</code></td><td>現在乗っている<a href="https://taotao54321.github.io/SusanoohResource/ram/#transporter">乗り物</a></td></tr>
+<tr><td><code>$22B2-$22C9</code></td><td><code>u8[24]</code></td><td>各戦闘キャラの所属陣営 (0:なし, 1:味方, 2:敵)</td></tr>
+<tr><td><code>$22CA-$22E1</code></td><td><code>u8[24]</code></td><td>各戦闘キャラのID (味方ならキャラID, 敵なら敵ID)</td></tr>
+<tr><td><code>$22E2-$22F9</code></td><td><code>u8[24]</code></td><td>各戦闘キャラの座標x</td></tr>
+<tr><td><code>$2312-$2329</code></td><td><code>u8[24]</code></td><td>各戦闘キャラの座標y</td></tr>
+<tr><td><code>$23D2-$23E9</code></td><td><code>u8[24]</code></td><td>各戦闘キャラの現在HP</td></tr>
+<tr><td><code>$23EA-$2401</code></td><td><code>u8[24]</code></td><td>各戦闘キャラの最大HP</td></tr>
+<tr><td><code>$2402-$2419</code></td><td><code>u8[24]</code></td><td>各戦闘キャラの現在MP</td></tr>
+<tr><td><code>$241A-$2431</code></td><td><code>u8[24]</code></td><td>各戦闘キャラの最大MP</td></tr>
+<tr><td><code>$2432-$2449</code></td><td><code>u8[24]</code></td><td>各戦闘キャラのOP</td></tr>
+<tr><td><code>$244A-$2461</code></td><td><code>u8[24]</code></td><td>各戦闘キャラのSTR</td></tr>
+<tr><td><code>$2462-$2479</code></td><td><code>u8[24]</code></td><td>各戦闘キャラのMDX</td></tr>
+<tr><td><code>$247A-$2491</code></td><td><code>u8[24]</code></td><td>各戦闘キャラのDEX</td></tr>
+<tr><td><code>$2492-$24A9</code></td><td><code>u8[24]</code></td><td>各戦闘キャラのVIT</td></tr>
+<tr><td><code>$24AA-$24C1</code></td><td><code>u8[24]</code></td><td>各戦闘キャラの内部LV</td></tr>
+<tr><td><code>$24F2-$2509</code></td><td><code>u8[24]</code></td><td>各戦闘キャラのバリアレベル</td></tr>
+<tr><td><code>$2523</code></td><td><code>u8</code></td><td>現在見ているアイテムの各種フラグ (bit0:近接武器, bit1:遠隔武器, bit2:鎧, bit3:盾, bit4:兜, bit5:道具欄に現れる, bit6:売却不可, bit7:道具使用時にイベントスクリプトを実行)</td></tr>
+<tr><td><code>$2524</code></td><td><code>u8</code></td><td>現在見ているアイテムの近接攻撃力</td></tr>
+<tr><td><code>$2525</code></td><td><code>u8</code></td><td>現在見ているアイテムの遠隔攻撃力</td></tr>
+<tr><td><code>$2526</code></td><td><code>u8</code></td><td>現在見ているアイテムの遠隔武器プロパティ Byte2 (write-only?)</td></tr>
+<tr><td><code>$2527</code></td><td><code>u8</code></td><td>現在見ているアイテムの近接命中補正</td></tr>
+<tr><td><code>$2528</code></td><td><code>u8</code></td><td>現在見ているアイテムの遠隔武器プロパティ Byte1 (write-only?)</td></tr>
+<tr><td><code>$2529</code></td><td><code>u8</code></td><td>現在見ているアイテムの防御力</td></tr>
+<tr><td><code>$252A</code></td><td><code>u8</code></td><td>現在見ているアイテムの防具プロパティ Byte1 (write-only?)</td></tr>
+<tr><td><code>$252B</code></td><td><code>u8</code></td><td>現在見ているアイテムのイベントスクリプトID</td></tr>
+<tr><td><code>$26F9</code></td><td><code>u8</code></td><td>戦闘: 現在のダメージ攻撃のダメージランク (0:E, 1:A, 2:B, 3:C, 4:D)</td></tr>
+<tr><td><code>$26FB</code></td><td><code>u8</code></td><td>ストーリー進行度</td></tr>
+<tr><td><code>$2770</code></td><td><code>u8</code></td><td>HP表示設定 (0:左, 1:右, 2:なし)</td></tr>
+<tr><td><code>$2776</code></td><td><code>u8</code></td><td>現在見ているキャラの習得ESPレベル: PK</td></tr>
+<tr><td><code>$2777</code></td><td><code>u8</code></td><td>現在見ているキャラの習得ESPレベル: ウェーブ</td></tr>
+<tr><td><code>$2778</code></td><td><code>u8</code></td><td>現在見ているキャラの習得ESPレベル: フレア</td></tr>
+<tr><td><code>$2779</code></td><td><code>u8</code></td><td>現在見ているキャラの習得ESPレベル: バリア</td></tr>
+<tr><td><code>$277A</code></td><td><code>u8</code></td><td>現在見ているキャラの習得ESPレベル: キュア</td></tr>
+<tr><td><code>$277B</code></td><td><code>u8</code></td><td>現在見ているキャラの習得ESPレベル: ホールド</td></tr>
+<tr><td><code>$277C</code></td><td><code>u8</code></td><td>現在見ているキャラの習得ESPレベル: レビ</td></tr>
+<tr><td><code>$277D</code></td><td><code>u8</code></td><td>現在見ているキャラの習得ESPレベル: テレポート</td></tr>
+<tr><td><code>$277F</code></td><td><code>u8</code></td><td>使用するESP (bit0-1:レベル(0-based), bit2-4:種類(0:PK,1:ウェーブ,2:フレア,3:バリア,4:キュア,5:ホールド,6:レビ,7:テレポート))</td></tr>
+<tr><td><code>$2781</code></td><td><code>u8</code></td><td>時刻 (0:朝, 1:昼, 2:夕方, 3:夜)。bit7 は闇の大陸フラグ</td></tr>
+<tr><td><code>$2782</code></td><td><code>u8</code></td><td>時刻タイマー (<code>0..=15</code>)</td></tr>
+<tr><td><code>$2783</code></td><td><code>u8</code></td><td>メッセージ速度 (0-based)</td></tr>
+<tr><td><code>$2784</code></td><td><code>u8</code></td><td>バトルメッセージ表示設定 (0:表示, 1:非表示)</td></tr>
+<tr><td><code>$2785</code></td><td><code>u8</code></td><td>待機中の<a href="https://taotao54321.github.io/SusanoohResource/ram/#transporter">乗り物</a></td></tr>
+<tr><td><code>$2786</code></td><td><code>i16le</code></td><td>待機中の乗り物のマップ内座標x</td></tr>
+<tr><td><code>$2788</code></td><td><code>i16le</code></td><td>待機中の乗り物のマップ内座標y</td></tr>
+<tr><td><code>$279E</code></td><td><code>u8</code></td><td>MPR 退避用スタックポインタ</td></tr>
+<tr><td><code>$279F-</code></td><td></td><td>MPR 退避用スタック</td></tr>
+<tr><td><code>$281A</code></td><td><code>u8</code></td><td>戦闘: 現在のダメージ攻撃の種類 (0:遠隔, 1:近接, 2:ESP, 3:手投げ弾)</td></tr>
+<tr><td><code>$2C95</code></td><td><code>u8</code></td><td>戦闘: 次の 1 歩がOP内での第 1 歩であるか (0:false, 1:true)。false のとき、さらに歩くとOPを消費する</td></tr>
+<tr><td><code>$2C96</code></td><td><code>u8</code></td><td>戦闘: ダメージ計算結果</td></tr>
+<tr><td><code>$2CB6</code></td><td><code>u8</code></td><td>戦闘: ターゲットカーソル記憶用</td></tr>
+<tr><td><code>$2CBF</code></td><td><code>u8</code></td><td>戦闘: 敵を倒した際の獲得経験値</td></tr>
+<tr><td><code>$2CC0</code></td><td><code>u8</code></td><td>戦闘: 敵を倒した際の獲得金額</td></tr>
+</tbody></table>
+<h2 id="input">コントローラー入力</h2>
+<table><thead><tr><th>bit</th><th>キー</th></tr></thead><tbody>
+<tr><td>0</td><td>I</td></tr>
+<tr><td>1</td><td>II</td></tr>
+<tr><td>2</td><td>Select</td></tr>
+<tr><td>3</td><td>Run</td></tr>
+<tr><td>4</td><td>Up</td></tr>
+<tr><td>5</td><td>Right</td></tr>
+<tr><td>6</td><td>Down</td></tr>
+<tr><td>7</td><td>Left</td></tr>
+</tbody></table>
+<h2 id="transporter">乗り物</h2>
+<table><thead><tr><th>値</th><th>種類</th></tr></thead><tbody>
+<tr><td>0</td><td>(なし)</td></tr>
+<tr><td>1</td><td>タグボート</td></tr>
+<tr><td>2</td><td>外洋船</td></tr>
+<tr><td>3</td><td>ホバークラフト</td></tr>
+<tr><td>4</td><td>飛行機</td></tr>
+<tr><td>5</td><td>ラングーン</td></tr>
+</tbody></table>
+
+
+
+</body>
+</html>
